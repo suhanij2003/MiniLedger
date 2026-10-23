@@ -15,6 +15,21 @@ CREATE TABLE IF NOT EXISTS users (
     created_at  TIMESTAMP           DEFAULT NOW()
 );
 
+-- Migration safety for existing installations
+ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
+ALTER TABLE users DROP CONSTRAINT IF EXISTS users_phone_key;
+ALTER TABLE users ADD CONSTRAINT users_phone_key UNIQUE (phone);
+ALTER TABLE users ALTER COLUMN name DROP NOT NULL;
+ALTER TABLE users ALTER COLUMN name SET DEFAULT 'User';
+DO $$ BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'email') THEN
+        ALTER TABLE users ALTER COLUMN email DROP NOT NULL;
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'password') THEN
+        ALTER TABLE users ALTER COLUMN password DROP NOT NULL;
+    END IF;
+END $$;
+
 -- ----------------------------------------
 -- TABLE: otps
 -- Stores generated one-time passwords for authentication
