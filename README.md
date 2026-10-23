@@ -71,15 +71,18 @@ MiniLeader_App/
 
 ### 2. Database Setup
 
-1. Open your PostgreSQL terminal (`psql`) or pgAdmin.
-2. Create the database:
+1. Make sure your PostgreSQL server is running.
+2. In your PostgreSQL tool (`psql` or pgAdmin), create your database:
    ```sql
-   CREATE DATABASE miniledger_db;
+   CREATE DATABASE minileader_db;
    ```
-3. Run the schema file to initialize the tables (`users`, `otps`, `loans`):
+3. Set your credentials in `backend/.env` (see Step 3 below).
+4. Run the automated database initialization script:
    ```bash
-   psql -U postgres -d miniledger_db -f backend/config/schema.sql
+   cd backend
+   npm run db:init
    ```
+   *This automatically creates all tables (`users`, `otps`, `loans`), applies safety migrations, and sets up indexes.*
 
 ---
 
@@ -123,7 +126,9 @@ MiniLeader_App/
 
 ---
 
-### 4. Mobile App Setup
+### 4. Running the App (Mobile or Laptop Browser)
+
+You can run and test MiniLedger on a physical phone, on an emulator, or **directly on your laptop browser**:
 
 1. Navigate to the `mobile` folder:
    ```bash
@@ -133,14 +138,27 @@ MiniLeader_App/
    ```bash
    npm install
    ```
-3. Network Configuration:
-   - **Android Emulator:** Uses `http://10.0.2.2:3000` (pre-configured in `src/api/api.js`).
-   - **Physical Device:** Update `DEV_MACHINE_IP` in `mobile/src/api/api.js` with your computer's local Wi-Fi IP (e.g. `192.168.1.X`).
-4. Start the Expo development server:
+
+#### Option A: Run on Laptop Browser (No phone needed!)
+```bash
+npm run web
+```
+or start Expo and press **`w`**:
+```bash
+npx expo start
+```
+*MiniLedger will open automatically at **`http://localhost:8081`** in Chrome/Edge. Press `F12` and toggle the Mobile Device view (`Ctrl + Shift + M`) for an authentic phone feel.*
+
+#### Option B: Run on Mobile Phone (Expo Go)
+1. Run:
    ```bash
    npx expo start
    ```
-5. Press `a` for Android emulator, `i` for iOS simulator, or scan the QR code using the **Expo Go** app on your physical device.
+2. Scan the terminal QR code using the **Expo Go** app on your iOS or Android phone.
+   *(Note: Ensure your phone and laptop are on the same Wi-Fi network, and update `DEV_MACHINE_IP` in `mobile/src/api/api.js` to your computer's local IP).*
+
+#### Option C: Run on Android Emulator
+Press **`a`** in the Expo terminal. Android emulator automatically connects to backend at `http://10.0.2.2:3000`.
 
 ---
 
