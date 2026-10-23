@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment Variables & Secrets
+.env
+.env*.local
+backend/.env
+
+# Expo & Mobile
+.expo/
+mobile/.expo/
+dist/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Testing
+coverage/
+
+# Logs & Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
