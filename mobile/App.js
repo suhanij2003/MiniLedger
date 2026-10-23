@@ -4,9 +4,31 @@
 // ============================================================
 
 import React from 'react';
-import { ActivityIndicator, View, StatusBar } from 'react-native';
+import { ActivityIndicator, View, StatusBar, Platform, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// ── Web Alert Polyfill ─────────────────────────────────────────
+// Enables confirmation dialogs (Repay, Delete, Logout) in laptop browser
+if (Platform.OS === 'web') {
+    Alert.alert = (title, message, buttons) => {
+        const fullMsg = [title, message].filter(Boolean).join('\n\n');
+        if (buttons && buttons.length > 1) {
+            const confirmBtn = buttons.find((b) => b.style !== 'cancel' && b.text !== 'Cancel') || buttons[buttons.length - 1];
+            const cancelBtn = buttons.find((b) => b.style === 'cancel' || b.text === 'Cancel');
+            if (window.confirm(fullMsg)) {
+                if (confirmBtn && confirmBtn.onPress) confirmBtn.onPress();
+            } else {
+                if (cancelBtn && cancelBtn.onPress) cancelBtn.onPress();
+            }
+        } else {
+            window.alert(fullMsg);
+            if (buttons && buttons[0] && buttons[0].onPress) {
+                buttons[0].onPress();
+            }
+        }
+    };
+}
 
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 
